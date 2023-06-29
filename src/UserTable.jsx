@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import './styles.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import { BiSortAlt2 } from "react-icons/bi"
+
 
 const UserTable = () => {
   const [users, setUsers] = useState([]);
@@ -60,19 +64,19 @@ const UserTable = () => {
   const renderTableHeaders = (
     //using table headers for sorting based on respective field
     <tr>
-      <th onClick={() => handleSort('name')}>Name</th>
-      <th onClick={() => handleSort('username')}>Username</th>
-      <th onClick={() => handleSort('email')}>Email</th>
-      <th onClick={() => handleSort('address.city')}>Address</th>
-      <th onClick={() => handleSort('phone')}>Phone</th>
-      <th onClick={() => handleSort('website')}>Website</th>
-      <th onClick={() => handleSort('company.name')}>Company</th>
+      <th className='sortingFields' onClick={() => handleSort('name')}>Name  <BiSortAlt2 /></th>
+      <th>Username</th>
+      <th className='sortingFields' onClick={() => handleSort('email')}>Email <BiSortAlt2 /> </th>
+      <th>Address</th>
+      <th>Phone</th>
+      <th>Website</th>
+      <th>Company</th>
       <th>Actions</th>
     </tr>
   );
 
   const renderPagination = (
-    <div>
+    <div className='pagination'>
       <button
         onClick={() => setCurrentPage(currentPage > 1 ? currentPage - 1 : 1)}
         disabled={currentPage === 1}
@@ -93,14 +97,29 @@ const UserTable = () => {
       </button>
     </div>
   );
+  const handleRowsPerPageChange = (event) => {
+    const value = parseInt(event.target.value);
+    setCurrentPage(1);
+    setRowsPerPage(value);
+  };
 
   return (
-    <div>
-      <table>
-        <thead>{renderTableHeaders}</thead>
-        <tbody>{renderTableRows}</tbody>
-      </table>
-      {renderPagination}
+    <div className='container'>
+        <div class="pagination">
+            <label htmlFor="rowsPerPage" className='form-label'>Rows per page: </label>
+            <select id="rowsPerPage" className='form-select rowsSelect'  value={rowsPerPage} onChange={handleRowsPerPageChange}>
+                <option value={5}>5</option>
+                <option value={10}>10</option>
+                <option value={20} disabled>20</option>
+            </select>
+        </div>
+        <div class="well">
+            <table className='table'>
+                <thead>{renderTableHeaders}</thead>
+                <tbody>{renderTableRows}</tbody>
+            </table>
+            {renderPagination}
+        </div>
     </div>
   );
 };
